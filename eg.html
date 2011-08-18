@@ -1,0 +1,20 @@
+<script type="text/javascript" src="contract.js"></script>
+<script type="text/javascript">
+var c = new Contract();
+
+// And then...
+var square = c.func({
+    'input': function () {
+        this.assert( arguments.length == 1, Error("Wrong number of arguments" ) );
+        this.assert( typeof arguments[0] == 'number', Error('Argument is a number') );
+    },
+    'output': function () {
+        this.assert( typeof arguments[0] == 'number', Error('Output is a number') );
+    },
+    'body': function (target) {
+        return target * target;
+    }
+});
+
+window.alert( square( 5 ) );
+</script>
