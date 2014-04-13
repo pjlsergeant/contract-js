@@ -23,7 +23,7 @@ function Contract (conf) {
         contract.conf['constructor'] : 'func';
 
     // Create a function. Pass me an object def
-    this[constructor] = function (definition) {
+    var body = function (definition) {
 
         // Wrapping function definition
         return function () {
@@ -49,21 +49,16 @@ function Contract (conf) {
             return result;
         };
     };
+
+    this[constructor] = body(
+    	'input':  function () {
+    		this.assert( typeof( arguments[0] ) == 'object',
+    			Error('Constructor should be passed a function') );
+    	},
+    	'output': function () {
+    		this.assert( typeof( arguments[0] ) == 'object',
+    			Error('Constructor should return a function') );
+    	},
+    	'body'  : body
+    );
 };
-c = new Contract();
-
-// And then...
-var square = c.func({
-    'input': function () {
-        this.assert( arguments.length == 1, Error("Wrong number of arguments" ) );
-        this.assert( typeof arguments[0] == 'number', Error('Argument is a number') );
-    },
-    'output': function () {
-        this.assert( typeof arguments[0] == 'number', Error('Output is a number') );
-    },
-    'body': function (target) {
-        return target * target;
-    }
-});
-
-print( square( 5 ) );
